@@ -5,6 +5,7 @@
 #include <globals.h>
 #include <iostream>
 #include "platforms.h"
+#include "player.h"
 
 Engine::Engine()
 {
@@ -22,6 +23,9 @@ void Engine::loop()
 		{sf::Vector2f(50, 300), sf::Vector2f(50,600) },
 		{sf::Vector2f(750, 300), sf::Vector2f(50,600) },
 	};
+	PlayerCharacter player = PlayerCharacter();
+
+	player.InitPlayer(world);
 
 	for (auto& platform : platforms)
 	{
@@ -44,6 +48,7 @@ void Engine::loop()
 		{
 			platform.Draw(window);
 		}
+		player.Draw(window);
 		// Update the window
 		window.display();
 

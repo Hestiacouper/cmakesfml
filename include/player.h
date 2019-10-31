@@ -11,6 +11,7 @@ public:
 	void InitPlayer(b2World& world);
 	void UpdatePlayer(float deltaTime);
 	void Draw(sf::RenderWindow& window);
+	void PlayerMove();
 	
 private:
 	b2Body* playerBody_ = nullptr;

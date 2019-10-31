@@ -12,10 +12,14 @@ Engine::Engine()
 	
 }
 
+
+
 void Engine::loop()
 {
+	
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Je hais sfml");
-
+	window.setVerticalSyncEnabled(true);
+	
 	b2World world(b2Vec2(0.0f, 9.81f));
 	
 	std::vector<Platform> platforms = {
@@ -23,6 +27,7 @@ void Engine::loop()
 		{sf::Vector2f(50, 300), sf::Vector2f(50,600) },
 		{sf::Vector2f(750, 300), sf::Vector2f(50,600) },
 	};
+	
 	PlayerCharacter player = PlayerCharacter();
 
 	player.InitPlayer(world);
@@ -31,18 +36,37 @@ void Engine::loop()
 	{
 		platform.PlatformInit(world);
 	}
+
+	sf::Clock clock;
+	
 	while (window.isOpen())
 	{
-		//sf::Time deltaTime = clock.restart();
-		// Process events
+		
+		sf::Time deltaTime = clock.restart();
+		// Process events		
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
+			
 			// Close window: exit
 			if (event.type == sf::Event::Closed)
 				window.close();
-
 		}
+
+		/*if (event.type == sf::Event::KeyPressed)
+		{
+			if (event.key.code == sf::Keyboard::S)
+			{
+				player.PlayerMove();
+				std::cout << "pressed S \n";
+			}
+		}*/
+		
+		
+		//player.PlayerMove();
+		world.Step(deltaTime.asSeconds(), velocityIterations, positionIterations);
+		window.clear(sf::Color::Black);
+		
 
 		for (auto& platform : platforms)
 		{
@@ -51,6 +75,6 @@ void Engine::loop()
 		player.Draw(window);
 		// Update the window
 		window.display();
-
+		//system("pause");
 	}
 }

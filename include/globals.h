@@ -4,11 +4,16 @@
 #include <SFML/System.hpp>
 #include <Box2D/Box2D.h>
 
+const float framerate = 60.f; //God this has made my laptop so much happier 
+
 using meter = float;
 using pixel = float;
 
 const float framerate = 60.f;
 const float pixelPerMeter = 100.0f;
+
+const int velocityIterations = 8;
+const int positionIterations = 8;
 
 float pixel2meter(float pixel);
 float meter2pixel(float meter);

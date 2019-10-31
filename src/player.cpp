@@ -23,20 +23,38 @@ void PlayerCharacter::InitPlayer(b2World& world)
 	bodyDef.fixedRotation = true;
 	playerBody_ = world.CreateBody(&bodyDef);
 
+
+	boxRectDebug_.setSize(boxSize);
+	boxRectDebug_.setOrigin(boxSize / 2.0f);
+	boxRectDebug_.setFillColor(sf::Color(0, 255, 0, 120));
+	boxRectDebug_.setOutlineColor(sf::Color::Green);
+	boxRectDebug_.setOutlineThickness(2.0f);
+
 	b2PolygonShape shape;
 	shape.SetAsBox(pixel2meter(boxSize.x) / 2.0f, pixel2meter(boxSize.y) / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &shape;
 	fixtureDef.friction = 0.0f;
-	//fixtureDef.userData = this;
 
 	playerBody_->CreateFixture(&fixtureDef);
 }
 
 void PlayerCharacter::Draw(sf::RenderWindow& window)
 {
+	boxRectDebug_.setPosition(meter2pixel(playerBody_->GetPosition()));
 	playerPosition_ = meter2pixel(playerBody_->GetPosition());
 	playerSprite_.setPosition(playerPosition_);
 	window.draw(playerSprite_);
+	window.draw(boxRectDebug_);
+}
+
+void PlayerCharacter::PlayerMove()
+{
+	float yPos = playerBody_->GetPosition().y;
+	//std::cout << "X before move : " << playerBody_->GetPosition().x << " Y before move : " << playerBody_->GetPosition().y << "\n";
+	yPos += 0.5;
+	playerBody_->SetTransform(b2Vec2(playerBody_->GetPosition().x, yPos), 0);
+	//playerBody_->ApplyForce(b2Vec2(0, 1), playerBody_->GetWorldCenter(), true);
+	//std::cout << "X after move : " << playerBody_->GetPosition().x << " Y after move : " << playerBody_->GetPosition().y << "\n";
 }

@@ -18,12 +18,12 @@ void Platform::PlatformInit(b2World& world)
 
 	b2BodyDef bodyDef;
 	bodyDef.position = pixel2meter(position_);
+	bodyDef.type = b2_staticBody;
 	platformBody_ = world.CreateBody(&bodyDef);
 	b2PolygonShape shape;
 	shape.SetAsBox(pixel2meter(size_.x / 2.0f), pixel2meter(size_.y / 2.0f));
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &shape;
-	//fixtureDef.userData = this;
 	fixtureDef.friction = 0.0f;
 	platformBody_->CreateFixture(&fixtureDef);
 }

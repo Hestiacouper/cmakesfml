@@ -12,7 +12,7 @@ public:
 	void UpdatePlayer(float deltaTime);
 	void Draw(sf::RenderWindow& window);
 	void PlayerMove(float dt);
-	
+	void PlayerJump(float dt);
 private:
 	b2Body* playerBody_ = nullptr;
 	sf::Texture playerTexture_; 
@@ -23,4 +23,5 @@ private:
 	pixel playerSpeed_ = 200.0f;
 	float movementFactor_ = 0.7f;
 	sf::Event event;
+	float jump = -5.0f;
 };

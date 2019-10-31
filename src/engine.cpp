@@ -17,9 +17,10 @@ Engine::Engine()
 void Engine::loop()
 {
 
-	sf::RenderWindow window(sf::VideoMode(1000, 1000), "Je hais sfml");
+	sf::RenderWindow window(sf::VideoMode(1000, 1000), "PLATFORMER");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(maxFramerate);
+	window.setKeyRepeatEnabled(false);
 
 	b2World world(b2Vec2(0.0f, 9.81f));
 
@@ -42,32 +43,33 @@ void Engine::loop()
 
 	while (window.isOpen())
 	{
-
-		sf::Time deltaTime = clock.restart();
-		// Process events		
+		sf::Time deltaTime = clock.restart();	
 		sf::Event event;
+		
 		while (window.pollEvent(event))
 		{
-
-			// Close window: exit
 			if (event.type == sf::Event::Closed)
 				window.close();
+
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Space)
+				{
+					player.PlayerJump(deltaTime.asSeconds());
+				}
+			}
+
 		}
-
-
 
 		player.PlayerMove(deltaTime.asSeconds());
 		world.Step(deltaTime.asSeconds(), velocityIterations, positionIterations);
 		window.clear(sf::Color::Black);
-
 
 		for (auto& platform : platforms)
 		{
 			platform.Draw(window);
 		}
 		player.Draw(window);
-		// Update the window
 		window.display();
-		//system("pause");
 	}
 }

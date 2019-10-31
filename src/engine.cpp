@@ -6,6 +6,7 @@
 #include <iostream>
 #include "platforms.h"
 #include "player.h"
+#include "SFML/Audio/SoundBuffer.hpp"
 
 Engine::Engine()
 {
@@ -16,6 +17,13 @@ Engine::Engine()
 
 void Engine::loop()
 {
+
+	sf::SoundBuffer buffer;
+	if (!buffer.loadFromFile("sound.wav"))
+	{
+		std::cout << "J'ai raté mon coup";
+	}
+
 
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "PLATFORMER");
 	window.setVerticalSyncEnabled(true);

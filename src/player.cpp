@@ -44,7 +44,7 @@ void PlayerCharacter::PlayerMove(float dt)
 {
 
 	float move = 0.0f;
-
+	float jump = playerBody_->GetLinearVelocity().y; 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 	{
 		move -= 1.0f;
@@ -53,13 +53,29 @@ void PlayerCharacter::PlayerMove(float dt)
 	{
 		move += 1.0f;
 	}
+	/*if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Space)
+		{
+			jump = -10.0;
+			std::cout << "J'ai casser le jeu\n";
+		}
+	}*/
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		jump -= 1.0f;
+	}
 
 	const float deltaVelX = move * pixel2meter(playerSpeed_) - playerBody_->GetLinearVelocity().x; //If the soustraction of playerbody current velocity is removed will be fast and keep mooving for a bit.
 	//good to know for later
-	const float fx = movementFactor_ * playerBody_->GetMass() * deltaVelX / dt;
-	std::cout << " Player mass " << playerBody_->GetMass() << "\n";
-	//if deltaVelX is used instead of fx will slide slowly. Good to know. 
-	playerBody_->ApplyForce(b2Vec2(fx, playerBody_->GetLinearVelocity().y), playerBody_->GetWorldCenter(), true);
+	const float forceX = movementFactor_ * playerBody_->GetMass() * deltaVelX / dt;
+
+	const float deltaVelY = jump - playerBody_->GetLinearVelocity().y;
+	const float forceY = playerBody_->GetMass() * deltaVelY / dt;
+	//if deltaVelX is used instead of forceX will slide slowly. Good to know.
+	std::cout << forceY << "\n";
+	playerBody_->ApplyForce(b2Vec2(forceX, forceY), playerBody_->GetWorldCenter(), true);
 
 
 

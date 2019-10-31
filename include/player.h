@@ -11,7 +11,7 @@ public:
 	void InitPlayer(b2World& world);
 	void UpdatePlayer(float deltaTime);
 	void Draw(sf::RenderWindow& window);
-	void PlayerMove();
+	void PlayerMove(float dt);
 	
 private:
 	b2Body* playerBody_ = nullptr;
@@ -20,5 +20,7 @@ private:
 	sf::RectangleShape boxRectDebug_;
 	sf::Vector2f playerPosition_ = sf::Vector2f(400, 300);
 	const sf::Vector2f boxSize = sf::Vector2f(136, 102);
+	pixel playerSpeed_ = 200.0f;
+	float movementFactor_ = 0.7f;
 	
 };

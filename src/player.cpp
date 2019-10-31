@@ -23,38 +23,46 @@ void PlayerCharacter::InitPlayer(b2World& world)
 	bodyDef.fixedRotation = true;
 	playerBody_ = world.CreateBody(&bodyDef);
 
-
-	boxRectDebug_.setSize(boxSize);
-	boxRectDebug_.setOrigin(boxSize / 2.0f);
-	boxRectDebug_.setFillColor(sf::Color(0, 255, 0, 120));
-	boxRectDebug_.setOutlineColor(sf::Color::Green);
-	boxRectDebug_.setOutlineThickness(2.0f);
-
 	b2PolygonShape shape;
 	shape.SetAsBox(pixel2meter(boxSize.x) / 2.0f, pixel2meter(boxSize.y) / 2.0f);
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &shape;
 	fixtureDef.friction = 0.0f;
-
+	
 	playerBody_->CreateFixture(&fixtureDef);
 }
 
 void PlayerCharacter::Draw(sf::RenderWindow& window)
 {
-	boxRectDebug_.setPosition(meter2pixel(playerBody_->GetPosition()));
 	playerPosition_ = meter2pixel(playerBody_->GetPosition());
 	playerSprite_.setPosition(playerPosition_);
 	window.draw(playerSprite_);
-	window.draw(boxRectDebug_);
 }
 
-void PlayerCharacter::PlayerMove()
+void PlayerCharacter::PlayerMove(float dt)
 {
-	float yPos = playerBody_->GetPosition().y;
-	//std::cout << "X before move : " << playerBody_->GetPosition().x << " Y before move : " << playerBody_->GetPosition().y << "\n";
-	yPos += 0.5;
-	playerBody_->SetTransform(b2Vec2(playerBody_->GetPosition().x, yPos), 0);
-	//playerBody_->ApplyForce(b2Vec2(0, 1), playerBody_->GetWorldCenter(), true);
-	//std::cout << "X after move : " << playerBody_->GetPosition().x << " Y after move : " << playerBody_->GetPosition().y << "\n";
+
+	float move = 0.0f;
+
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		move -= 1.0f;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+	{
+		move += 1.0f;
+	}
+
+	const float deltaVelX = move * pixel2meter(playerSpeed_) - playerBody_->GetLinearVelocity().x; //If the soustraction of playerbody current velocity is removed will be fast and keep mooving for a bit.
+	//good to know for later
+	const float fx = movementFactor_ * playerBody_->GetMass() * deltaVelX / dt;
+	std::cout << " Player mass " << playerBody_->GetMass() << "\n";
+	//if deltaVelX is used instead of fx will slide slowly. Good to know. 
+	playerBody_->ApplyForce(b2Vec2(fx, playerBody_->GetLinearVelocity().y), playerBody_->GetWorldCenter(), true);
+
+
+
+
+	
 }

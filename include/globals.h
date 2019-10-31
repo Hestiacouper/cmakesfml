@@ -1,15 +1,13 @@
-#ifndef UTILITY_H
-#define UTILITY_H
+#pragma once
 
 #include <SFML/System.hpp>
 #include <Box2D/Box2D.h>
 
-const float framerate = 60.f; //God this has made my laptop so much happier 
+const float maxFramerate = 60.f; //Laptop isn't burning anymore
 
 using meter = float;
 using pixel = float;
 
-const float framerate = 60.f;
 const float pixelPerMeter = 100.0f;
 
 const int velocityIterations = 8;
@@ -21,4 +19,4 @@ float meter2pixel(float meter);
 b2Vec2 pixel2meter(sf::Vector2f pixels);
 sf::Vector2f meter2pixel(b2Vec2 meters);
 
-#endif
+

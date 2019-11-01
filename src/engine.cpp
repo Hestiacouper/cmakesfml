@@ -45,7 +45,7 @@ void Engine::Lose(sf::RenderWindow& window)
 
 void Engine::Loop()
 {
-	
+	sf::Color skyblue = sf::Color(0, 191, 255);
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "PLATFORMER");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(maxFramerate);
@@ -96,7 +96,7 @@ void Engine::Loop()
 
 		playerCharacter_.PlayerMove(deltaTime.asSeconds());
 		world.Step(deltaTime.asSeconds(), velocityIterations, positionIterations);
-		window.clear(sf::Color::Black);
+		window.clear(skyblue);
 
 		for (auto& platform : platforms)
 		{

@@ -4,7 +4,7 @@
 #include "globals.h"
 
 
-class Platform
+class Platform : public GameObject
 {
 
 public:
@@ -13,9 +13,10 @@ public:
 	void Draw(sf::RenderWindow& window);
 private:
 
-	sf::RectangleShape rectShape_;
-	sf::Vector2f size_;
-	sf::Vector2f position_;
+
 	b2Body* platformBody_ = nullptr;
+	sf::RectangleShape rectShape_;
+	sf::Vector2f position_;
+	sf::Vector2f size_;
 	
 };

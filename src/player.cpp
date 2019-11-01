@@ -1,7 +1,7 @@
 #include "player.h"
 #include "globals.h"
 #include <iostream>
-
+#include <SFML/Audio.hpp>
 
 PlayerCharacter::PlayerCharacter()
 {
@@ -29,7 +29,7 @@ void PlayerCharacter::InitPlayer(b2World& world)
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &shape;
 	fixtureDef.friction = 0.0f;
-	
+	fixtureDef.userData = this;
 	playerBody_->CreateFixture(&fixtureDef);
 }
 
@@ -39,6 +39,17 @@ void PlayerCharacter::Draw(sf::RenderWindow& window)
 	playerSprite_.setPosition(playerPosition_);
 	window.draw(playerSprite_);
 }
+
+void PlayerCharacter::LoadSoundShit()
+{
+	
+	if (!buffer.loadFromFile("D:\\Development\\SAE\\919\\ExerciceC++\\SFMLBugPas\\cmakesfml\\data\\ISSOU.wav"))
+	{
+		std::cout << "J'ai raté mon coup";
+	}
+	sound.setBuffer(buffer);
+}
+
 
 void PlayerCharacter::PlayerMove(float dt)
 {
@@ -55,8 +66,8 @@ void PlayerCharacter::PlayerMove(float dt)
 		move += 1.0f;
 	}
 	
-	const float deltaVelX = move * pixel2meter(playerSpeed_) - playerBody_->GetLinearVelocity().x; //If the soustraction of playerbody current velocity is removed will be fast and keep mooving for a bit.
-	//good to know for later
+	const float deltaVelX = move * pixel2meter(playerSpeed_) - playerBody_->GetLinearVelocity().x; //If the soustraction of playerbody current velocity is removed
+	//player will be fast and keep mooving for a bit. Good to know for later
 	const float forceX = movementFactor_ * playerBody_->GetMass() * deltaVelX / dt;
 
 	
@@ -69,6 +80,19 @@ void PlayerCharacter::PlayerJump(float dt)
 {
 	const float deltaVelY = jump - playerBody_->GetLinearVelocity().y;
 	const float forceY = playerBody_->GetMass() * deltaVelY / dt;
+	if (contactNmb_ > 0)
+	{
+		sound.play();
+		playerBody_->ApplyForce(b2Vec2(playerBody_->GetPosition().x, forceY), playerBody_->GetWorldCenter(), true);
+	}
+}
 
-	playerBody_->ApplyForce(b2Vec2(playerBody_->GetPosition().x, forceY), playerBody_->GetWorldCenter(), true);
+void PlayerCharacter::OnContactBegin()
+{
+	contactNmb_++;
+}
+
+void PlayerCharacter::OnContactEnd()
+{
+	contactNmb_--;
 }

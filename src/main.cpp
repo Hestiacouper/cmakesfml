@@ -6,7 +6,7 @@ int main()
 {
 	Engine engine;
 
-	engine.loop();
+	engine.Loop();
 
 
 	system("pause");

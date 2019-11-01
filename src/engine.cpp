@@ -4,44 +4,38 @@
 #include <Box2D/Box2D.h>
 #include <globals.h>
 #include <iostream>
-#include "platforms.h"
 #include "player.h"
-#include "SFML/Audio/SoundBuffer.hpp"
+#include "platforms.h"
 
-Engine::Engine()
+
+Engine::Engine() : platformListener_(this)
 {
 	
 }
 
-
-
-void Engine::loop()
+void Engine::Loop()
 {
-
-	sf::SoundBuffer buffer;
-	if (!buffer.loadFromFile("sound.wav"))
-	{
-		std::cout << "J'ai raté mon coup";
-	}
-
-
+	
 	sf::RenderWindow window(sf::VideoMode(1000, 1000), "PLATFORMER");
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(maxFramerate);
 	window.setKeyRepeatEnabled(false);
 
 	b2World world(b2Vec2(0.0f, 9.81f));
+	world.SetContactListener(&platformListener_);
 
+	
 	std::vector<Platform> platforms = {
-		{sf::Vector2f(400.0f, 550), sf::Vector2f(800,50) },
-		{sf::Vector2f(50, 300), sf::Vector2f(50,600) },
-		{sf::Vector2f(750, 300), sf::Vector2f(50,600) },
+		{sf::Vector2f(200.0f, 550), sf::Vector2f(800,50) },
+		{sf::Vector2f(100, 200), sf::Vector2f(100,50) },
+		{sf::Vector2f(750, 420), sf::Vector2f(200,50) },
+		{sf::Vector2f(750,650), sf::Vector2f(300,50)},
+		{sf::Vector2f(450,750),sf::Vector2f(700,50)},
 	};
 
-	PlayerCharacter player = PlayerCharacter();
-
-	player.InitPlayer(world);
-
+	//PlayerCharacter player = PlayerCharacter();
+	playerCharacter_.InitPlayer(world);
+	playerCharacter_.LoadSoundShit();
 	for (auto& platform : platforms)
 	{
 		platform.PlatformInit(world);
@@ -63,13 +57,13 @@ void Engine::loop()
 			{
 				if (event.key.code == sf::Keyboard::Space)
 				{
-					player.PlayerJump(deltaTime.asSeconds());
+					playerCharacter_.PlayerJump(deltaTime.asSeconds());
 				}
 			}
 
 		}
 
-		player.PlayerMove(deltaTime.asSeconds());
+		playerCharacter_.PlayerMove(deltaTime.asSeconds());
 		world.Step(deltaTime.asSeconds(), velocityIterations, positionIterations);
 		window.clear(sf::Color::Black);
 
@@ -77,7 +71,43 @@ void Engine::loop()
 		{
 			platform.Draw(window);
 		}
-		player.Draw(window);
+		playerCharacter_.Draw(window);
 		window.display();
 	}
+}
+
+void Engine::OnContactEnter(b2Fixture* c1, b2Fixture* c2)
+{
+	GameObject* g1 = (GameObject*)(c1->GetUserData());
+	GameObject* g2 = (GameObject*)(c2->GetUserData());
+	if (g1->GetGameObjectType() == GameObjectType::PLAYER_CHARACTER ||
+		g2->GetGameObjectType() == GameObjectType::PLATFORM)
+	{
+		playerCharacter_.OnContactBegin();
+	}
+}
+
+void Engine::OnContactExit(b2Fixture* c1, b2Fixture* c2)
+{
+	GameObject* g1 = (GameObject*)(c1->GetUserData());
+	GameObject* g2 = (GameObject*)(c2->GetUserData());
+	if (g1->GetGameObjectType() == GameObjectType::PLAYER_CHARACTER ||
+		g2->GetGameObjectType() == GameObjectType::PLATFORM)
+	{
+		playerCharacter_.OnContactEnd();
+	}
+}
+
+PlatformContactListener::PlatformContactListener(Engine* engine) : engine_(engine)
+{
+}
+
+void PlatformContactListener::BeginContact(b2Contact* contact)
+{
+	engine_->OnContactEnter(contact->GetFixtureA(), contact->GetFixtureB());
+}
+
+void PlatformContactListener::EndContact(b2Contact* contact)
+{
+	engine_->OnContactExit(contact->GetFixtureA(), contact->GetFixtureB());
 }

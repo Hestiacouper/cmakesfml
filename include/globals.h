@@ -19,4 +19,17 @@ float meter2pixel(float meter);
 b2Vec2 pixel2meter(sf::Vector2f pixels);
 sf::Vector2f meter2pixel(b2Vec2 meters);
 
+enum class GameObjectType
+{
+	PLAYER_CHARACTER,
+	PLATFORM
+};
 
+class GameObject
+{
+public:
+	GameObjectType GetGameObjectType() const { return gameObjectType_; };
+protected:
+	GameObjectType gameObjectType_;
+
+};

@@ -3,7 +3,7 @@
 
 Platform::Platform(sf::Vector2f position, sf::Vector2f size) : position_(position), size_(size)
 {
-	
+	gameObjectType_ = GameObjectType::PLATFORM;
 }
 
 
@@ -22,9 +22,11 @@ void Platform::PlatformInit(b2World& world)
 	platformBody_ = world.CreateBody(&bodyDef);
 	b2PolygonShape shape;
 	shape.SetAsBox(pixel2meter(size_.x / 2.0f), pixel2meter(size_.y / 2.0f));
+
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &shape;
 	fixtureDef.friction = 0.0f;
+	fixtureDef.userData = this;
 	platformBody_->CreateFixture(&fixtureDef);
 }
 

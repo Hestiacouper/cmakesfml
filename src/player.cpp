@@ -96,3 +96,13 @@ void PlayerCharacter::OnContactEnd()
 {
 	contactNmb_--;
 }
+
+int PlayerCharacter::GetPlayerPosX()
+{
+	return playerSprite_.getPosition().x;
+}
+
+int PlayerCharacter::GetPlayerPosY()
+{
+	return playerSprite_.getPosition().y;
+}

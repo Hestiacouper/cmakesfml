@@ -12,11 +12,19 @@ public:
 	void PlatformInit(b2World& world);
 	void Draw(sf::RenderWindow& window);
 private:
-
-
+	sf::Color brown();
+	sf::Texture platformTexture_; 
+	sf::Sprite platformSprite_;
 	b2Body* platformBody_ = nullptr;
 	sf::RectangleShape rectShape_;
 	sf::Vector2f position_;
 	sf::Vector2f size_;
+	
+};
+
+class IcePlatform : public Platform
+{
+
+	IcePlatform(sf::Vector2f position, sf::Vector2f size);
 	
 };

@@ -6,11 +6,41 @@
 #include <iostream>
 #include "player.h"
 #include "platforms.h"
-
+#include "Jesus.h"
 
 Engine::Engine() : platformListener_(this)
 {
 	
+}
+
+void Engine::Win(sf::RenderWindow& window)
+{
+	if (!font.loadFromFile("D:\\Development\\SAE\\919\\ExerciceC++\\SFMLBugPas\\cmakesfml\\data\\arial.ttf"))
+	{
+		std::cout << "Wrong file path\n";
+	}
+	text.setFont(font);
+	text.setString("You won");
+	text.setCharacterSize(20);
+	text.setFillColor(sf::Color::Blue);
+	text.setStyle(sf::Text::Bold);
+	text.setOrigin(500, 500);
+	window.draw(text);
+}
+
+void Engine::Lose(sf::RenderWindow& window)
+{
+	if (!font.loadFromFile("D:\\Development\\SAE\\919\\ExerciceC++\\SFMLBugPas\\cmakesfml\\data\\arial.ttf"))
+	{
+		std::cout << "Wrong file path\n";
+	}
+	text.setFont(font);
+	text.setString("You lost");
+	text.setCharacterSize(20);
+	text.setFillColor(sf::Color::Red);
+	text.setStyle(sf::Text::Bold);
+	text.setOrigin(500, 500);
+	window.draw(text);
 }
 
 void Engine::Loop()
@@ -24,6 +54,7 @@ void Engine::Loop()
 	b2World world(b2Vec2(0.0f, 9.81f));
 	world.SetContactListener(&platformListener_);
 
+	Jesus jesus = Jesus();
 	
 	std::vector<Platform> platforms = {
 		{sf::Vector2f(200.0f, 550), sf::Vector2f(800,50) },
@@ -72,7 +103,24 @@ void Engine::Loop()
 			platform.Draw(window);
 		}
 		playerCharacter_.Draw(window);
+		jesus.Draw(window);
 		window.display();
+		if(playerCharacter_.GetPlayerPosY()>1000)
+		{
+			Lose(window);
+			window.display();
+			std::cout << "You lost\n";
+			system("pause");
+			break;
+		}
+		if (playerCharacter_.playerSprite_.getGlobalBounds().intersects(jesus.JesusSprite_.getGlobalBounds()))
+		{
+			Win(window);
+			window.display();
+			std::cout << "You won\n";
+			system("pause");
+			break;
+		}
 	}
 }
 

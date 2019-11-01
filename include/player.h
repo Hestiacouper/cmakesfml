@@ -18,10 +18,12 @@ public:
 	void OnContactBegin();
 	void OnContactEnd();
 	void LoadSoundShit();
+	int GetPlayerPosX();
+	int GetPlayerPosY();
+	sf::Sprite playerSprite_;
 private:
 	b2Body* playerBody_ = nullptr;
 	sf::Texture playerTexture_; 
-	sf::Sprite playerSprite_;
 	sf::RectangleShape boxRectDebug_;
 	sf::Vector2f playerPosition_ = sf::Vector2f(400, 300);
 	const sf::Vector2f boxSize = sf::Vector2f(26, 20);
